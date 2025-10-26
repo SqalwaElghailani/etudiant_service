@@ -1,5 +1,6 @@
 package faculte.etudiantsevise.service;
 
+import faculte.etudiantsevise.dto.EtudiantWithFiliereDto;
 import faculte.etudiantsevise.dto.RequestEtudiantDto;
 import faculte.etudiantsevise.dto.ResponseEtudiantDto;
 
@@ -12,6 +13,6 @@ public interface EtudiantService {
         public ResponseEtudiantDto GetEtudiantByID(Integer id);
         public ResponseEtudiantDto Update_Etudiant(Integer id,RequestEtudiantDto request);
         public void DeleteEtudiantByID(Integer id);
-
-    List<ResponseEtudiantDto> GetEtudiantsByFiliereId(Integer filiereId);
+        EtudiantWithFiliereDto GetEtudiantWithFiliere(Integer id);
+        List<ResponseEtudiantDto> GetEtudiantsByFiliereId(Integer filiereId);
 }

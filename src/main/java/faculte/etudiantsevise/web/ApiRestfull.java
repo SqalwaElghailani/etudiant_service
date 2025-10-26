@@ -1,5 +1,6 @@
 package faculte.etudiantsevise.web;
 
+import faculte.etudiantsevise.dto.EtudiantWithFiliereDto;
 import faculte.etudiantsevise.dto.RequestEtudiantDto;
 import faculte.etudiantsevise.dto.ResponseEtudiantDto;
 import faculte.etudiantsevise.service.EtudiantServiceImpl;
@@ -97,7 +98,28 @@ public class ApiRestfull {
     )
     @GetMapping("/{id}")
     public ResponseEntity<ResponseEtudiantDto> getById(@PathVariable Integer id) {
+
         ResponseEtudiantDto response = etudiantService.GetEtudiantByID(id);
+
+        return ResponseEntity.ok(response);
+    }
+    @Operation(
+            summary = " récupérer etudiant par Id avec filiere" ,
+            parameters = @Parameter(name = "id", required = true),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "bien récuperer",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ResponseEtudiantDto.class )
+                            )
+                    ),
+                    @ApiResponse(responseCode = "4xx",description = "erreur client"),
+                    @ApiResponse(responseCode = "5xx",description = "erreur serveur"),
+            }
+    )
+    @GetMapping("/{id}/with-filiere")
+    public ResponseEntity<EtudiantWithFiliereDto> getEtudiantWithFiliere(@PathVariable Integer id) {
+        EtudiantWithFiliereDto response = etudiantService.GetEtudiantWithFiliere(id);
         return ResponseEntity.ok(response);
     }
     @Operation(
@@ -143,12 +165,26 @@ public class ApiRestfull {
         etudiantService.DeleteEtudiantByID(id);
         return ResponseEntity.ok().build();
     }
+    @Operation(
+            summary = " récuperer liste des etudiant pour chaque filiere",
 
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "bien récuperer",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = ResponseEtudiantDto.class ))
+                            )
+                    ),
+                    @ApiResponse(responseCode = "4xx",description = "erreur client"),
+                    @ApiResponse(responseCode = "5xx",description = "erreur serveur"),
+            }
+    )
     @GetMapping("/filieres/{filiereId}")
     public ResponseEntity<List<ResponseEtudiantDto>> getByFiliere(@PathVariable Integer filiereId) {
         List<ResponseEtudiantDto> etudiants = etudiantService.GetEtudiantsByFiliereId(filiereId);
         return ResponseEntity.ok(etudiants);
     }
+
 
 
 
