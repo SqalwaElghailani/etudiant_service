@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +31,7 @@ import java.util.List;
 )
 @RestController
 @RequestMapping("/v1/etudiants")
-
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApiRestfull {
     private final EtudiantServiceImpl etudiantService;
 
@@ -59,6 +61,7 @@ public class ApiRestfull {
     )
 
     @PostMapping
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<ResponseEtudiantDto> add(@RequestBody RequestEtudiantDto requestEtudiantDto) {
         ResponseEtudiantDto response = etudiantService.Add_Etudiant(requestEtudiantDto);
         return ResponseEntity.ok(response);
@@ -78,6 +81,7 @@ public class ApiRestfull {
             }
     )
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN','SCOPE_USER')")
     public ResponseEntity<List<ResponseEtudiantDto>> getAll() {
         List<ResponseEtudiantDto> etudiants = etudiantService.GetAllEtudiants();
         return ResponseEntity.ok(etudiants);
@@ -97,6 +101,7 @@ public class ApiRestfull {
             }
     )
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('SCOPE_ADMIN','SCOPE_USER')")
     public ResponseEntity<ResponseEtudiantDto> getById(@PathVariable Integer id) {
 
         ResponseEtudiantDto response = etudiantService.GetEtudiantByID(id);
@@ -118,6 +123,7 @@ public class ApiRestfull {
             }
     )
     @GetMapping("/{id}/with-filiere")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<EtudiantWithFiliereDto> getEtudiantWithFiliere(@PathVariable Integer id) {
         EtudiantWithFiliereDto response = etudiantService.GetEtudiantWithFiliere(id);
         return ResponseEntity.ok(response);
@@ -145,6 +151,7 @@ public class ApiRestfull {
             }
     )
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<ResponseEtudiantDto> update(
             @PathVariable Integer id,
             @RequestBody RequestEtudiantDto requestEtudiantDto) {
@@ -161,6 +168,7 @@ public class ApiRestfull {
             }
     )
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         etudiantService.DeleteEtudiantByID(id);
         return ResponseEntity.ok().build();
@@ -180,6 +188,7 @@ public class ApiRestfull {
             }
     )
     @GetMapping("/filieres/{filiereId}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN')")
     public ResponseEntity<List<ResponseEtudiantDto>> getByFiliere(@PathVariable Integer filiereId) {
         List<ResponseEtudiantDto> etudiants = etudiantService.GetEtudiantsByFiliereId(filiereId);
         return ResponseEntity.ok(etudiants);
