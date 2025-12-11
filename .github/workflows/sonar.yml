@@ -35,3 +35,5 @@ jobs:
           -Dsonar.projectKey=etudiant_service \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.projectKey=DevopsPipeLine
+
